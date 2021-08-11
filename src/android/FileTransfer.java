@@ -675,23 +675,8 @@ public class FileTransfer extends CordovaPlugin {
             return;
         }
 
-        Boolean shouldAllowRequest = null;
-        if (isLocalTransfer) {
-            shouldAllowRequest = true;
-        }
-
-        if (shouldAllowRequest == null) {
-            try {
-                Method gpm = webView.getClass().getMethod("getPluginManager");
-                PluginManager pm = (PluginManager)gpm.invoke(webView);
-                Method san = pm.getClass().getMethod("shouldAllowRequest", String.class);
-                shouldAllowRequest = (Boolean)san.invoke(pm, source);
-            } catch (NoSuchMethodException e) {
-            } catch (IllegalAccessException e) {
-            } catch (InvocationTargetException e) {
-            }
-        }
-
+        Boolean shouldAllowRequest = true;
+  
         if (!Boolean.TRUE.equals(shouldAllowRequest)) {
             LOG.w(LOG_TAG, "The Source URL is not in the Allow List: '" + source + "'");
             JSONObject error = createFileTransferError(CONNECTION_ERR, source, target, null, 401, null);
